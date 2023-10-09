@@ -1,6 +1,6 @@
 
 import pygame
-import keyboard
+from keyboard import on_press,wait,unhook_all
 import os
 
 corrent_red = '\033[31m {} \033[m'.format('='*20)
@@ -13,11 +13,33 @@ def music_tocar(list,n):
     pygame.mixer.music.load(f'musicas/{list[n]}')
     pygame.mixer.music.set_volume(1.0)
     pygame.mixer.music.play() 
+    on_press(press_space)
 
     while pygame.mixer.music.get_busy():
-        keyboard.on_press(press_space)
         pass
+
+t = 0
+
+def press_space(event):
+    global t
+
+    if event.name == "space":
+        t += 1
+        print(t)
+        if t % 2 == 1:
+            print("\033[31mPAUSADO!!!\033[m")
+            pygame.mixer.music.pause()
+        else: 
+            print("\033[32mPLAY!!!\033[m")
+            pygame.mixer.music.unpause()
+        
+    if event.name == "left":
+        print("AVANÇAR")
+        pygame.mixer.music.set_pos(30)
     
+    if event.name == "right":
+        print("RETROCEDER")
+        pygame.mixer.music.set_pos(-30)
     
 
 past = 'musicas'
@@ -54,29 +76,10 @@ def escolha_validacao(escolha):
 
 music_selector = escolha_validacao(inp)
 
-t = 0
-
-def press_space(event):
-    global t
-
-    if event.name == "space":
-        t += 1
-        if t % 2 == 1:
-            print("\033[31mPAUSADO!!!\033[m")
-            pygame.mixer.music.pause()
-        else: 
-            print("\033[32mPLAY!!!\033[m")
-            pygame.mixer.music.play()
-
-    if event.name == 'right':
-        print("AVANÇO:")
-        pygame.mixer_music.set_pos(30)
-    elif event.name == 'left':
-         print("RETORNAR")
-         pygame.mixer_music.set_pos(-30)
-
-
 if musica_list:
     music_tocar(musica_list,music_selector)
 else:
     print("Nenhuma música encontrada no diretório.")
+
+wait("esc")  
+unhook_all()
